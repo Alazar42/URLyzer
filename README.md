@@ -13,7 +13,7 @@ URLyzer is a simple web application built with Django that allows users to analy
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your_username/URLyzer.git
+    git clone https://github.com/Alazar42/URLyzer.git
     ```
 
 2. Navigate to the project directory:
