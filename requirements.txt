@@ -3,13 +3,16 @@ beautifulsoup4==4.12.3
 Brotli==1.1.0
 certifi==2024.2.2
 charset-normalizer==3.3.2
+dj-database-url==2.1.0
 Django==4.0.3
 gunicorn==21.2.0
 idna==3.6
 packaging==24.0
 pillow==10.3.0
+psycopg2-binary==2.9.9
 requests==2.31.0
 soupsieve==2.5
 sqlparse==0.4.4
+typing_extensions==4.11.0
 urllib3==2.2.1
 whitenoise==6.6.0
