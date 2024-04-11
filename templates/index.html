@@ -392,21 +392,21 @@
                     <canvas id="pageSpeedChart"></canvas>
                     <p>{{data.first_contentful_paint}}</p><!-- Chart will be displayed here -->
                     <span>{{ data.time_to_interactive }}</span>
-                        <span>{{ data.cumulative_layout_shift }}</span>
+                    <span>{{ data.cumulative_layout_shift }}</span>
                     {% if data.error_psi %}
-                        <span>{{data.error_psi}}</span>
+                    <span>{{data.error_psi}}</span>
                     {% endif %}
                 </div>
             </div>
-            
+
             <script>
                 // Get data from server-side rendered template
                 var pageSpeedData = {
                     'First Contentful Paint': {{ data.first_contentful_paint.percentile }},
-                    'Time to Interactive': {{ data.time_to_interactive }},
-                    'Cumulative Layout Shift': {{ data.cumulative_layout_shift }}
+                'Time to Interactive': { { data.time_to_interactive } },
+                'Cumulative Layout Shift': { { data.cumulative_layout_shift } }
                 };
-            
+
                 // Create the bar chart
                 var cta = document.getElementById('pageSpeedChart').getContext('2d');
                 var chart = new Chart(cta, {
@@ -443,10 +443,10 @@
                 // Get the total resources loaded data from the server-side rendered template
                 var totalResourcesData = {
                     'Images': {{ data.img }},
-                    'Scripts': {{ data.script }},
-                    'Stylesheets': {{ data.link }}
+                'Scripts': { { data.script } },
+                'Stylesheets': { { data.link } }
                 };
-        
+
                 // Create the bar chart
                 var ctx = document.getElementById('resourcesChart').getContext('2d');
                 var chart = new Chart(ctx, {
@@ -479,7 +479,7 @@
                 });
             </script>
 
-            
+
             {% endif %}
 
             {% if not data_found %}
@@ -498,12 +498,9 @@
                 <div class="bg-secondary rounded-top p-4">
                     <div class="row">
                         <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">Your Site Name</a>, All Right Reserved.
+                            &copy; <a href="/">URLyzer</a>, All Right Reserved.
                         </div>
                         <div class="col-12 col-sm-6 text-center text-sm-end">
-                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                            Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-                            <br>Distributed By: <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
                         </div>
                     </div>
                 </div>
