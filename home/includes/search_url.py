@@ -1,6 +1,7 @@
 from requests import get
 from bs4 import BeautifulSoup
 from collections import Counter
+import time
 
 def analyze_url(url):
     """
@@ -16,8 +17,12 @@ def analyze_url(url):
 
     # Fetch the webpage content
     try:
+        start_time = time.time()
         response = get(url)
         response.raise_for_status()  # Raise an exception for bad status codes
+        end_time = time.time()
+        page_load_time = end_time - start_time
+        results["page_load_time"] = round(page_load_time, 2)
     except Exception as e:
         results["error"] = f"Error fetching webpage: {e}"
         return results
@@ -39,13 +44,12 @@ def analyze_url(url):
     else:
         results["description"] = "Missing meta description tag"
 
-   # Analyze Headings (H1, H2, etc.)
+    # Analyze Headings (H1, H2, etc.)
     headings = soup.find_all(['h1', 'h2', 'h3'])
     if headings:
         results["headings"] = [heading.text.strip() for heading in headings]
     else:
         results["headings"] = []
-
 
     # Analyze Internal Links (basic check)
     internal_links = set()
@@ -78,8 +82,46 @@ def analyze_url(url):
             external_links.append(link['href'])
     results["external_links"] = external_links
 
-    # Analyze Page Load Time (not implemented here - requires performance testing tools)
-    # ... (code to measure page load time)
-    # results["page_load_time"] = page_load_time_in_seconds
+     # Measure number of CSS files
+    css_files_count = len(soup.find_all('link', {'rel': 'stylesheet'}))
+    results["css_files_count"] = css_files_count
+
+    # Measure number of JavaScript files
+    js_files_count = len(soup.find_all('script', {'src': True}))
+    results["js_files_count"] = js_files_count
+
+    # Measure number of HTTP requests
+    http_requests_count = len(soup.find_all(['img', 'script', 'link', 'a', 'form', 'iframe']))
+    results["http_requests_count"] = http_requests_count
+
+     # Measure number of redirects
+    redirect_count = len(response.history)
+    results["redirect_count"] = redirect_count
+
+    # Analyze Total Number of Resources Loaded
+    total_resources = len(soup.find_all(['img', 'script', 'link']))
+    results['img'] = len(soup.find_all(['img']))
+    results['script'] = len(soup.find_all(['script']))
+    results['link'] = len(soup.find_all(['link']))
+    results["total_resources"] = total_resources
+
+     # Analyze AMP status
+    amp_link = soup.find('link', {'rel': 'amphtml'})
+    results['amp_status'] = "Yes" if amp_link else "No"
+
+    try:
+        psi_url = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url={url}"
+        psi_response = get(psi_url)
+        psi_data = psi_response.json()
+        if "loadingExperience" in psi_data:
+            loading_experience = psi_data["loadingExperience"]
+            results["first_contentful_paint"] = loading_experience.get("metrics", {}).get("FIRST_CONTENTFUL_PAINT_MS", -1)
+            results["time_to_interactive"] = loading_experience.get("metrics", {}).get("FIRST_INTERACTIVE_MS", -1)
+            results["cumulative_layout_shift"] = psi_data.get("lighthouseResult", {}).get("audits", {}).get("cumulative-layout-shift", {}).get("numericValue", -1)
+    except Exception as e:
+        results["error_psi"] = f"Error fetching PageSpeed Insights data: {e}"
+
+    # Additional SEO analysis
+    # You can add more SEO checks here based on your requirements
 
     return results
