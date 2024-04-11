@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'URLizyer.wsgi.application'
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default='postgresql://postgres:postgres@localhost:5432/mysite',
+        default='postgres://micky:3vRxPHzGH9yiLo8aHoX7bNZNE5ziHD2n@dpg-coc29t0cmk4c73ai8dj0-a.singapore-postgres.render.com/urlyzer',
         conn_max_age=600
     )
 }
